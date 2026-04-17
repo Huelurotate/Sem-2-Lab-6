@@ -58,8 +58,6 @@ void display_queue(Node* tail)
         printf("%d\n", temp->data);
         temp = temp->next;
     } while (temp != tail->next);
-
-    puts("");
 }
 
 void free_queue(Node** tail)

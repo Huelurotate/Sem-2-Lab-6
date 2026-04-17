@@ -2,8 +2,8 @@
 
 #include "deque.h"
 
-#define CAPACITY 10
 #define MAX_DEQUE_LENGTH 100
+#define CAPACITY 10
 
 // MENU
 void menu(Deque* deque);

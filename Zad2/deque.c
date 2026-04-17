@@ -101,7 +101,7 @@ void display_deque(Deque* dq)
     puts("\nDeque values:");
     while (temp != NULL)
     {
-        printf("%.2f\n", temp->data);
+        printf("%.3f\n", temp->data);
         temp = temp->next;
     }
     puts("");

@@ -64,11 +64,10 @@ void display_queue(Node* tail)
 
 void free_queue(Node** tail)
 {
-    if (tail == NULL) return;
-    if (is_empty(*tail)) return;
+    if (is_empty(*tail) || tail == NULL) 
+        return;
 
     Node* curr = (*tail)->next;
-
     Node* next_node;
 
     while (curr != *tail)

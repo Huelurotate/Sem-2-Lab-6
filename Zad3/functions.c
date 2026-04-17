@@ -16,19 +16,21 @@ void menu(Node** tail1, Node** tail2, Node** tail3, Node** tail4)
 		switch (menu_choice)
 		{
 		case 1:
-			input_queues(tail1, tail2, tail3, &length);
+			input_queues(tail1, tail2, tail3, tail4, &length);
 			break;
 		case 2:
 			if (is_empty(*tail1) || is_empty(*tail2) || is_empty(*tail3))
 				puts("\nQueue(s) is empty.");
 			else
-				input_queues(*tail1, *tail2, *tail3, *tail4);
+				output_queues(*tail1, *tail2, *tail3, *tail4);
 			break;
 		case 3:
-			/*if (!is_empty(*tail))
-				alt_input_queue(tail);
+			if (is_empty(*tail1) || is_empty(*tail2) || is_empty(*tail3))
+				puts("\nQueue(s) is empty.");
+			else if (!is_empty(*tail4))
+				puts("\nYou have already filled the 4th queue.");
 			else
-				puts("\nQueue is empty.");*/
+				input_4th_queue(tail4, length);
 			break;
 		case 4:
 			is_running = 0;
@@ -59,10 +61,13 @@ void menu_option_choice(int* choice)
 	}
 }
 
-void input_queues(Node** tail1, Node** tail2, Node** tail3, int* length)
+void input_queues(Node** tail1, Node** tail2, Node** tail3, Node** tail4, int* length)
 {
-	/*if (!is_empty(*tail1) || !is_empty(*tail2) || !is_empty(*tail3))
-		free_all_queues(tail1, tail2, tail3, NULL);*/
+	if (!is_empty(*tail1) || !is_empty(*tail2) || !is_empty(*tail3) || !is_empty(*tail4))
+	{
+		free_all_queues(tail1, tail2, tail3, tail4);
+		*length = 0;
+	}
 
 	input_queue_values(tail1, tail2, tail3, length);
 }
@@ -73,25 +78,26 @@ void input_queue_values(Node** tail1, Node** tail2, Node** tail3, int* length)
 	int continue_choice = 1;
 	while (continue_choice)
 	{
-		temp = NULL;
-		printf("\nEnter name number %d(Enter - Stop):\n", *length + 1);
-		str_input(&temp);
-		enqueue(tail1, temp);
+		printf("\nEnter name number %d:\n", *length + 1);
+		input_single_queue_value(&temp, tail1);
 
-		temp = NULL;
-		printf("\nEnter middle name number %d(Enter - stop):\n", *length + 1);
-		str_input(&temp);
-		enqueue(tail2, temp);
+		printf("\nEnter middle name number %d:\n", *length + 1);
+		input_single_queue_value(&temp, tail2);
 
-		temp = NULL;
-		printf("\nEnter surname number %d(Enter - stop):\n", *length + 1);
-		str_input(&temp);
-		enqueue(tail3, temp);
+		printf("\nEnter surname number %d:\n", *length + 1);
+		input_single_queue_value(&temp, tail3);
 
 		continue_request(&continue_choice);
 
 		(*length)++;
 	}
+}
+
+void input_single_queue_value(char** temp_var, Node** tail)
+{
+	*temp_var = NULL;
+	str_input(temp_var);
+	enqueue(tail, *temp_var);
 }
 
 void continue_request(int* choice)
@@ -159,9 +165,9 @@ void output_queues(Node* tail1, Node* tail2, Node* tail3, Node* tail4)
 	Node* temp1 = tail1->next;
 	Node* temp2 = tail2->next;
 	Node* temp3 = tail3->next;
-	Node* temp4 = (is_empty(tail4)) ? NULL : tail4->next;
+	Node* temp4 = (!is_empty(tail4)) ? tail4->next : NULL;
 
-	printf("\nNAME:            MIDDLE NAME:     SURNAME:         ");
+	printf("\n NAME:            MIDDLE NAME:     SURNAME:         ");
 	if (!is_empty(tail4))
 		printf("CITY:");
 	puts("");
@@ -181,16 +187,22 @@ void output_queues(Node* tail1, Node* tail2, Node* tail3, Node* tail4)
 	puts("");
 }
 
+void input_4th_queue(Node** tail, int length)
+{
+	char* temp = NULL;
+	for(int i = 0; i < length; i++)
+	{
+		printf("\nEnter city number %d:\n", i + 1);
+		input_single_queue_value(&temp, tail);
+	}
+}
+
 void free_all_queues(Node** tail1, Node** tail2, Node** tail3, Node** tail4)
 {
-	if (tail1 != NULL)
-		free_queue(tail1);
-	if (tail2 != NULL)
-		free_queue(tail2);
-	if (tail3 != NULL)
-		free_queue(tail3);
-	if (tail4 != NULL)
-		free_queue(tail4);
+	free_queue(tail1);
+	free_queue(tail2);
+	free_queue(tail3);
+	free_queue(tail4);
 }
 
 void check_char_alloc(char* memory_block)
